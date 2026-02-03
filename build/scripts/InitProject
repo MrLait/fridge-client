@@ -1,0 +1,5 @@
+mkdir src build/scripts
+
+dotnet new sln -n Fridge.Client
+dotnet new mvc -n Fridge.Client -f net8.0 -o src/Fridge.Client
+dotnet sln add src/Fridge.Client/Fridge.Client.csproj
