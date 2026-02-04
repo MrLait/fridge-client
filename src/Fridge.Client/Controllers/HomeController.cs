@@ -1,31 +1,17 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Fridge.Client.Models;
+using Fridge.Client.Api;
 
 namespace Fridge.Client.Controllers;
 
-public class HomeController : Controller
+public class HomeController(FridgeApiClient api) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    public IActionResult Index() => View();
 
-    public HomeController(ILogger<HomeController> logger)
+    [HttpPost]
+    public async Task<IActionResult> Restock(CancellationToken ct)
     {
-        _logger = logger;
-    }
-
-    public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var updated = await api.RestockZeroQuantityToDefaultAsync(ct);
+        TempData["RestockResult"] = $"Restock completed. Updated: {updated}";
+        return RedirectToAction(nameof(Index));
     }
 }

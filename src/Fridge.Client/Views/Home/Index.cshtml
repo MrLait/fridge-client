@@ -1,8 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Fridge</h2>
+
+
+@if (TempData["RestockResult"] is string msg)
+{
+    <div class="alert alert-info">@msg</div>
+}
+
+<form asp-action="Restock" method="post">
+    <button type="submit" class="btn btn-primary">Restock zero-quantity items</button>
+</form>
+
+<hr />
+
+<a class="btn btn-outline-secondary" href="/Fridges">Go to fridges</a>

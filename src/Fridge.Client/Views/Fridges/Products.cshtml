@@ -1,0 +1,27 @@
+@model List<Fridge.Client.Api.Dtos.FridgeProductDto>
+
+<h2>Products</h2>
+
+<p>FridgeId: @ViewBag.FridgeId</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>ProductDefaultQuantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.ProductName</td>
+                <td>@p.Quantity</td>
+                <td>@p.ProductDefaultQuantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-outline-secondary" href="/Fridges">Back</a>

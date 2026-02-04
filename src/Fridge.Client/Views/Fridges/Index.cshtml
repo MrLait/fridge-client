@@ -1,0 +1,27 @@
+@model List<Fridge.Client.Api.Dtos.FridgeDto>
+
+<h2>Fridges</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Model</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var f in Model)
+        {
+            <tr>
+                <td>@f.Name</td>
+                <td>@f.OwnerName</td>
+                <td>@f.ModelName (@f.ModelYear)</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" href="/Fridges/Products/@f.Id">Products</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
