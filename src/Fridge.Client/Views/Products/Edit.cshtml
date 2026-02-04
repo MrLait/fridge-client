@@ -1,0 +1,27 @@
+@model Fridge.Client.Models.EditProductVm
+
+<h2>Edit product</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="Name"></label>
+        <input class="form-control" asp-for="Name" />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="DefaultQuantity"></label>
+        <input class="form-control" asp-for="DefaultQuantity" type="number" />
+        <span class="text-danger" asp-validation-for="DefaultQuantity"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-outline-secondary" href="/Products">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
