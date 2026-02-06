@@ -1,11 +1,11 @@
 using Fridge.Client.Api;
+using Fridge.Client.Api.Clients;
 using Fridge.Client.Models;
 using Microsoft.AspNetCore.Mvc;
-using static Fridge.Client.Api.FridgeApiClient;
 
 namespace Fridge.Client.Controllers;
 
-public sealed class ProductsController(FridgeApiClient api) : Controller
+public sealed class ProductsController(ProductsApi api) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
     {
@@ -37,7 +37,7 @@ public sealed class ProductsController(FridgeApiClient api) : Controller
         if (!ModelState.IsValid)
             return View(vm);
 
-        var updated = await api.UpdateProduct(vm.Id, new UpdateProductRequest(vm.Name, vm.DefaultQuantity), ct);
+        var updated = await api.UpdateProductAsync(vm.Id, new UpdateProductRequest(vm.Name, vm.DefaultQuantity), ct);
         return RedirectToAction(nameof(Index));
     }
 }

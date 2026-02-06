@@ -1,9 +1,10 @@
 using Fridge.Client.Api;
+using Fridge.Client.Api.Clients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fridge.Client.Controllers;
 
-public class FridgesController(FridgeApiClient api) : Controller
+public class FridgesController(FridgesApi api) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
     {

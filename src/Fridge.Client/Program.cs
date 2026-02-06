@@ -1,3 +1,4 @@
+using Fridge.Client;
 using Fridge.Client.Api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,11 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpClient<FridgeApiClient>(http =>
-{
-    var baseUrl = builder.Configuration["Api:BaseUrl"];
-    http.BaseAddress = new Uri(baseUrl!);
-});
+builder.Services.AddFridgeApi(builder.Configuration["Api:BaseUrl"]!);
 
 var app = builder.Build();
 

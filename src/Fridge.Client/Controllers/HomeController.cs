@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Fridge.Client.Api;
+using Fridge.Client.Api.Clients;
 
 namespace Fridge.Client.Controllers;
 
-public class HomeController(FridgeApiClient api) : Controller
+public class HomeController(MaintenanceApi api) : Controller
 {
     public IActionResult Index() => View();
 
