@@ -1,7 +1,6 @@
 
 namespace Fridge.Client.Api.Clients;
 
-
 public sealed class MaintenanceApi(HttpClient http) : ApiClientBase(http)
 {
     private sealed record RestockResponse(int Updated);
@@ -12,5 +11,4 @@ public sealed class MaintenanceApi(HttpClient http) : ApiClientBase(http)
 
         return resp.Updated;
     }
-
 }

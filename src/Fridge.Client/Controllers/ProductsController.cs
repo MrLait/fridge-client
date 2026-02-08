@@ -9,14 +9,14 @@ public sealed class ProductsController(ProductsApi api) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
     {
-        var products = await api.GetProductsAsync(ct) ?? [];
+        var products = await api.GetAllAsync(ct) ?? [];
         return View(products);
     }
 
     [HttpGet]
     public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
     {
-        var product = await api.GetProductByIdAsync(id, ct);
+        var product = await api.GetByIdAsync(id, ct);
 
         if (product is null)
             return NotFound();
@@ -37,7 +37,7 @@ public sealed class ProductsController(ProductsApi api) : Controller
         if (!ModelState.IsValid)
             return View(vm);
 
-        var updated = await api.UpdateProductAsync(vm.Id, new UpdateProductRequest(vm.Name, vm.DefaultQuantity), ct);
+        var updated = await api.UpdateAsync(vm.Id, new UpdateProductRequest(vm.Name, vm.DefaultQuantity), ct);
         return RedirectToAction(nameof(Index));
     }
 }

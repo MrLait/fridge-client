@@ -4,13 +4,29 @@ namespace Fridge.Client.Api.Clients;
 
 public class FridgesApi(HttpClient http) : ApiClientBase(http)
 {
-    public Task<List<FridgeDto>?> GetFridgesAsync(CancellationToken ct = default)
-        => Http.GetFromJsonAsync<List<FridgeDto>>("/api/fridges", ct);
+    public Task<List<FridgeDto>> GetAllAsync(CancellationToken ct = default)
+        => GetRequiredAsync<List<FridgeDto>>("/api/fridges", ct);
 
-    public Task<FridgeDto?> GetFridgeByIdAsync(Guid id, CancellationToken ct = default)
+    public Task<FridgeDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
         => GetOrNullIfNotFoundAsync<FridgeDto>($"/api/fridges/{id}", ct);
 
-    public Task<List<FridgeProductDto>?> GetFridgeProductsAsync(Guid fridgeId, CancellationToken ct = default)
-        => Http.GetFromJsonAsync<List<FridgeProductDto>>($"/api/fridges/{fridgeId}/products", ct);
+    public Task<List<FridgeProductDto>> GetProductsAsync(Guid fridgeId, CancellationToken ct = default)
+        => GetRequiredAsync<List<FridgeProductDto>>($"/api/fridges/{fridgeId}/products", ct);
+
+    public Task<Guid> CreateAsync(CreateFridgeRequest request, CancellationToken ct = default)
+        => PostJsonAsync<Guid>($"/api/fridges", request, ct);
+
+    public Task UpdateAsync(Guid id, UpdateFridgeRequest request, CancellationToken ct = default)
+        => PutAsync($"/api/fridges/{id}", request, ct);
+
+    public Task DeleteAsync(Guid id, CancellationToken ct = default)
+        => DeleteAsync($"/api/fridges/{id}", ct);
+
+    public Task<Guid> AddProductAsync(Guid id, AddProductToFridgeRequest body, CancellationToken ct)
+        => PostJsonAsync<Guid>($"api/fridges/{id}/products", body, ct);
+
+    public sealed record CreateFridgeRequest(string Name, string? OwnerName, Guid ModelId);
+    public sealed record UpdateFridgeRequest(string Name, string? OwnerName, Guid ModelId);
+    public sealed record AddProductToFridgeRequest(Guid ProductId, int Quantity);
 }
 

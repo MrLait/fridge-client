@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Fridge.Client.Api;
 using Fridge.Client.Api.Clients;
 
 namespace Fridge.Client.Controllers;
