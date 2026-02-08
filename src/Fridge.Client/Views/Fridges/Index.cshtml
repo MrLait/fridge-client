@@ -2,13 +2,17 @@
 
 <h2>Fridges</h2>
 
+<div class="mb-3">
+    <a class="btn btn-primary" href="/Fridges/Create">Create fridge</a>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Name</th>
             <th>Owner</th>
             <th>Model</th>
-            <th></th>
+            <th style="width: 260px;"></th>
         </tr>
     </thead>
     <tbody>
@@ -19,9 +23,53 @@
                 <td>@f.OwnerName</td>
                 <td>@f.ModelName (@f.ModelYear)</td>
                 <td>
-                    <a class="btn btn-sm btn-outline-primary" href="/Fridges/Products/@f.Id">Products</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/Fridges/Edit/@f.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/Fridges/Products/@f.Id">Products</a>
+
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                        data-fridge-id="@f.Id" data-fridge-name="@f.Name">
+                        Delete
+                    </button>
+
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete fridge</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="fridgeName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form method="post" asp-action="Delete">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="fridgeId" />
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const fridgeId = button.getAttribute('data-fridge-id');
+            const fridgeName = button.getAttribute('data-fridge-name');
+
+            document.getElementById('fridgeId').value = fridgeId;
+            document.getElementById('fridgeName').innerText = fridgeName;
+        });
+    </script>
+}

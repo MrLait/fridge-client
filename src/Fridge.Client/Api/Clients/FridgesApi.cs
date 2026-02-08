@@ -13,8 +13,8 @@ public class FridgesApi(HttpClient http) : ApiClientBase(http)
     public Task<List<FridgeProductDto>> GetProductsAsync(Guid fridgeId, CancellationToken ct = default)
         => GetRequiredAsync<List<FridgeProductDto>>($"/api/fridges/{fridgeId}/products", ct);
 
-    public Task<Guid> CreateAsync(CreateFridgeRequest request, CancellationToken ct = default)
-        => PostJsonAsync<Guid>($"/api/fridges", request, ct);
+    public async Task<Guid> CreateAsync(CreateFridgeRequest request, CancellationToken ct = default)
+        => (await PostJsonAsync<CreateFridgeResponse>($"/api/fridges", request, ct)).Id;
 
     public Task UpdateAsync(Guid id, UpdateFridgeRequest request, CancellationToken ct = default)
         => PutAsync($"/api/fridges/{id}", request, ct);
@@ -28,5 +28,6 @@ public class FridgesApi(HttpClient http) : ApiClientBase(http)
     public sealed record CreateFridgeRequest(string Name, string? OwnerName, Guid ModelId);
     public sealed record UpdateFridgeRequest(string Name, string? OwnerName, Guid ModelId);
     public sealed record AddProductToFridgeRequest(Guid ProductId, int Quantity);
+    public sealed record CreateFridgeResponse(Guid Id);
 }
 
