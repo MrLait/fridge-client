@@ -1,4 +1,5 @@
-@model Fridge.Client.Models.FridgeFormVm
+@model Fridge.Client.Models.ViewModels.Fridges.CreateFridgeVm
+
 <h2>Create fridge</h2>
 
 <form asp-action="Create" method="post">
@@ -16,18 +17,81 @@
         <span class="text-danger" asp-validation-for="OwnerName"></span>
     </div>
 
-
     <div class="mb-3">
         <label class="form-label" asp-for="ModelId"></label>
         <select class="form-select" asp-for="ModelId" asp-items="Model.Models">
-            <option value="">Select fridge model</option>
+            <option value="">-- select model --</option>
         </select>
-        <span class="text-danger" asp-validation-for="Name"></span>
+        <span class="text-danger" asp-validation-for="ModelId"></span>
     </div>
 
+    <hr />
+    <h4>Initial products</h4>
+
+    <div class="row g-2 align-items-end mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Product</label>
+            <select class="form-select" asp-for="ProductIdToAdd" asp-items="Model.Products">
+                <option value="">-- select product --</option>
+            </select>
+            <span class="text-danger" asp-validation-for="ProductIdToAdd"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Quantity</label>
+            <input class="form-control" asp-for="QuantityToAdd" type="number" min="1" />
+            <span class="text-danger" asp-validation-for="QuantityToAdd"></span>
+        </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-outline-primary w-100" type="submit" formaction="@Url.Action("AddInitialProduct")">
+                Add to list
+            </button>
+        </div>
+    </div>
+
+    @for (int i = 0; i < (Model.InitialProducts?.Count ?? 0); i++)
+    {
+        <input type="hidden" name="InitialProducts[@i].ProductId" value="@Model.InitialProducts[i].ProductId" />
+        <input type="hidden" name="InitialProducts[@i].ProductName" value="@Model.InitialProducts[i].ProductName" />
+        <input type="hidden" name="InitialProducts[@i].Quantity" value="@Model.InitialProducts[i].Quantity" />
+    }
+
+    @if (Model.InitialProducts is not null && Model.InitialProducts.Count > 0)
+    {
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th style="width: 120px;">Quantity</th>
+                    <th style="width: 120px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.InitialProducts)
+                {
+                    <tr>
+                        <td>@item.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" type="submit"
+                                formaction="@Url.Action("RemoveInitialProduct", new { productId = item.ProductId })">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-muted">No initial products selected.</p>
+    }
+
+    <hr />
     <button class="btn btn-primary" type="submit">Create</button>
     <a class="btn btn-outline-secondary" href="/Fridges">Cancel</a>
-
 </form>
 
 @section Scripts {

@@ -22,12 +22,20 @@ public class FridgesApi(HttpClient http) : ApiClientBase(http)
     public Task DeleteAsync(Guid id, CancellationToken ct = default)
         => DeleteAsync($"/api/fridges/{id}", ct);
 
-    public Task<Guid> AddProductAsync(Guid id, AddProductToFridgeRequest body, CancellationToken ct)
-        => PostJsonAsync<Guid>($"api/fridges/{id}/products", body, ct);
+    public async Task<Guid> AddProductAsync(Guid id, AddProductToFridgeRequest body, CancellationToken ct)
+        => (await PostJsonAsync<AddProductResponse>($"api/fridges/{id}/products", body, ct)).Id;
 
-    public sealed record CreateFridgeRequest(string Name, string? OwnerName, Guid ModelId);
+    public sealed record CreateFridgeRequest(
+        string Name,
+        string? OwnerName,
+        Guid ModelId,
+        IEnumerable<FridgeProductItem>? InitialProducts
+    );
+
+    public sealed record FridgeProductItem(Guid ProductId, int Quantity);
     public sealed record UpdateFridgeRequest(string Name, string? OwnerName, Guid ModelId);
     public sealed record AddProductToFridgeRequest(Guid ProductId, int Quantity);
     public sealed record CreateFridgeResponse(Guid Id);
+    public sealed record AddProductResponse(Guid Id);
 }
 

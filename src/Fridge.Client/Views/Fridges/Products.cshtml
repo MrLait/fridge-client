@@ -1,27 +1,57 @@
-@model List<Fridge.Client.Api.Dtos.FridgeProductDto>
+@model Fridge.Client.Models.FridgeProductsVm
 
-<h2>Products</h2>
+<h2>Products in fridge</h2>
 
-<p>FridgeId: @ViewBag.FridgeId</p>
-
+<h4>Current items</h4>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Product</th>
             <th>Quantity</th>
-            <th>ProductDefaultQuantity</th>
+            <th>Default</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var p in Model)
+        @foreach (var x in Model.Items)
         {
             <tr>
-                <td>@p.ProductName</td>
-                <td>@p.Quantity</td>
-                <td>@p.ProductDefaultQuantity</td>
+                <td>@x.ProductName</td>
+                <td>@x.Quantity</td>
+                <td>@x.ProductDefaultQuantity</td>
+                <td>
+                    <form asp-action="DeleteProduct" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="fridgeId" value="@Model.FridgeId" />
+                        <input type="hidden" name="fridgeProductId" value="@x.Id" />
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+<h4>Add product</h4>
+<form asp-action="AddProduct" method="post" class="row g-2">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="FridgeId" />
+
+    <div class="col-md-6">
+        <select class="form-select" asp-for="ProductId" asp-items="Model.Products">
+            <option value="">-- select product --</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <input class="form-control" asp-for="Quantity" type="number" min="0" />
+    </div>
+
+    <div class="col-md-3">
+        <button class="btn btn-primary w-100" type="submit">Add</button>
+    </div>
+</form>
+
+<hr />
 
 <a class="btn btn-outline-secondary" href="/Fridges">Back</a>

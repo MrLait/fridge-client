@@ -1,5 +1,4 @@
 using Fridge.Client;
-using Fridge.Client.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
