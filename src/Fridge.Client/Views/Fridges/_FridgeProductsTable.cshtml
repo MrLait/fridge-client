@@ -1,0 +1,35 @@
+@model List<Fridge.Client.Api.Dtos.FridgeProductDto>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Default</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <td>@x.ProductName</td>
+                <td>@x.Quantity</td>
+                <td>@x.ProductDefaultQuantity</td>
+                <td>
+                    @* <form asp-action="DeleteProduct" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="fridgeId" value="@Model.FridgeId" />
+                        <input type="hidden" name="fridgeProductId" value="@x.Id" />
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                    </form> *@
+
+                    <form asp-action="DeleteProduct" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="fridgeId" value="@x.Id" />
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

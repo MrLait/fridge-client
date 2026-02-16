@@ -167,15 +167,18 @@ public class FridgesController(
         return View(vm);
     }
 
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddProduct(FridgeProductsVm vm, CancellationToken ct)
+    public async Task<IActionResult> AddProductAjax(Guid fridgeId, Guid productId, int quantity, CancellationToken ct)
     {
-        if (!ModelState.IsValid)
-            return RedirectToAction(nameof(Products), new { id = vm.FridgeId });
+        if (fridgeId == Guid.Empty || productId == Guid.Empty || quantity <= 0)
+            return BadRequest("Invalid input.");
 
-        await fridgesApi.AddProductAsync(vm.FridgeId, new AddProductToFridgeRequest(vm.ProductId, vm.Quantity), ct);
-        return RedirectToAction(nameof(Products), new { id = vm.FridgeId });
+        await fridgesApi.AddProductAsync(fridgeId, new AddProductToFridgeRequest(productId, quantity), ct);
+
+        var items = await fridgesApi.GetProductsAsync(fridgeId, ct);
+        return PartialView("_FridgeProductsTable", items.ToList());
     }
 
     [HttpPost]
