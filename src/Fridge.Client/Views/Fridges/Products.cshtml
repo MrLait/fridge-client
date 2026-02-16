@@ -3,6 +3,8 @@
 <h2>Products in fridge</h2>
 
 <h4>Add product</h4>
+<div id="actionMessage" class="alert d-none" role="alert"></div>
+
 <form id="addForm" asp-action="AddProductAjax" method="post" class="row g-2">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="FridgeId" value="@Model.FridgeId" />
@@ -27,37 +29,72 @@
 </form>
 
 <div id="itemsContainer">
-    @await Html.PartialAsync("_FridgeProductsTable", Model.Items)
+    @await Html.PartialAsync("_FridgeProductsTable", Model.Items, new ViewDataDictionary(ViewData)
+    {
+    ["FridgeId"] = Model.FridgeId
+        })
 </div>
-
 <hr />
 
 <a class="btn btn-outline-secondary" href="/Fridges">Back</a>
 
 @section Scripts {
     <script>
-        document.getElementById('addForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        const msgEl = document.getElementById("actionMessage");
+        function showMessage(text, type) {
+            msgEl.className = `alert alert-${type}`;
+            msgEl.textContent = text;
+            msgEl.classList.remove("d-none");
+        }
 
-            const form = e.target;
+        function hideMessage() {
+            msgEl.classList.add("d-none");
+            msgEl.textContent = "";
+        }
+
+        async function handleAjaxFormSubmit(form, containerId) {
             const resp = await fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form),
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
+
+            if (resp.status === 401) {
+                showMessage("You must be logged in to perform this action. Go to Login page.", "warning");
+                return;
+            }
 
             if (!resp.ok) {
                 const text = await resp.text();
-                alert(text);
+                showMessage(text || "Request failed.", "danger");
                 return;
             }
 
             const html = await resp.text();
-            document.getElementById('itemsContainer').innerHTML = html;
+            document.getElementById(containerId).innerHTML = html;
+            showMessage("Done.", "success");
 
-            form.querySelector('input[name="Quantity"]').value = 1;
+            wireDeleteHandlers();
+        }
+
+        // ADD product
+        document.getElementById('addForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            await handleAjaxFormSubmit(e.target, "itemsContainer");
+            e.target.querySelector('input[name="Quantity"]').value = 1;
         });
+
+        // DELETE product handlers
+        function wireDeleteHandlers() {
+            document.querySelectorAll('#itemsContainer form.delete-item-form')
+                .forEach(f => {
+                    f.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+                        await handleAjaxFormSubmit(e.target, "itemsContainer");
+                    });
+                });
+        }
+
+        wireDeleteHandlers();
     </script>
 }

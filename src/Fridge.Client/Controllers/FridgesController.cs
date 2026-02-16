@@ -178,15 +178,22 @@ public class FridgesController(
         await fridgesApi.AddProductAsync(fridgeId, new AddProductToFridgeRequest(productId, quantity), ct);
 
         var items = await fridgesApi.GetProductsAsync(fridgeId, ct);
+        ViewData["FridgeId"] = fridgeId;
         return PartialView("_FridgeProductsTable", items.ToList());
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteProduct(Guid fridgeId, Guid fridgeProductId, CancellationToken ct)
+    public async Task<IActionResult> DeleteProductAjax(Guid fridgeId, Guid fridgeProductId, CancellationToken ct)
     {
+        if (fridgeId == Guid.Empty || fridgeProductId == Guid.Empty)
+            return BadRequest("Invalid input.");
+
         await fridgeProductApi.DeleteByIdAsync(fridgeProductId, ct);
-        return RedirectToAction(nameof(Products), new { id = fridgeId });
+
+        var items = await fridgesApi.GetProductsAsync(fridgeId, ct);
+        ViewData["FridgeId"] = fridgeId;
+        return PartialView("_FridgeProductsTable", items.ToList());
     }
 
     private async Task PopulateModel(FridgeFormVm vm, CancellationToken ct)

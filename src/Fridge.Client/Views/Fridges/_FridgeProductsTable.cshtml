@@ -1,5 +1,9 @@
 @model List<Fridge.Client.Api.Dtos.FridgeProductDto>
 
+@{
+    var fridgeId = (Guid)ViewData["FridgeId"]!;
+}
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -17,16 +21,11 @@
                 <td>@x.Quantity</td>
                 <td>@x.ProductDefaultQuantity</td>
                 <td>
-                    @* <form asp-action="DeleteProduct" method="post" style="display:inline;">
+                    <form class="delete-item-form" asp-action="DeleteProductAjax" method="post">
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="fridgeId" value="@Model.FridgeId" />
+                        <input type="hidden" name="fridgeId" value="@fridgeId" />
                         <input type="hidden" name="fridgeProductId" value="@x.Id" />
                         <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
-                    </form> *@
-
-                    <form asp-action="DeleteProduct" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="fridgeId" value="@x.Id" />
                     </form>
                 </td>
             </tr>

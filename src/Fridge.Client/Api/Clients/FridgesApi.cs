@@ -23,7 +23,7 @@ public class FridgesApi(HttpClient http) : ApiClientBase(http)
         => DeleteAsync($"/api/fridges/{id}", ct);
 
     public async Task<Guid> AddProductAsync(Guid id, AddProductToFridgeRequest body, CancellationToken ct)
-        => (await PostJsonAsync<AddProductResponse>($"api/fridges/{id}/products", body, ct)).Id;
+        => (await PostJsonAsync<AddProductResponse>($"/api/fridges/{id}/products", body, ct)).Id;
 
     public sealed record CreateFridgeRequest(
         string Name,

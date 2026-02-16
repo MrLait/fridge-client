@@ -1,4 +1,5 @@
 using Fridge.Client;
+using Fridge.Client.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseMiddleware<ApiUnauthorizedMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

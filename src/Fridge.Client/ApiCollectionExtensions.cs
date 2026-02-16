@@ -21,7 +21,7 @@ public static class ApiCollectionExtensions
         services.AddHttpClient<FridgesApi>("FridgeApi");
         services.AddHttpClient<MaintenanceApi>("FridgeApi");
         services.AddHttpClient<ProductsApi>("FridgeApi");
-        // services.AddHttpClient<ProductImageApi>("FridgeApi");
+        services.AddHttpClient<ProductImagesApi>("FridgeApi");
 
         return services;
     }

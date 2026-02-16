@@ -42,6 +42,13 @@ public class ApiClientBase(HttpClient http)
         await EnsureSuccessAsync(resp, ct);
     }
 
+    protected async Task<T> PostMultipartAsync<T>(string url, MultipartFormDataContent form, CancellationToken ct)
+    {
+        using var resp = await Http.PostAsync(url, form, ct);
+        await EnsureSuccessAsync(resp, ct);
+        return await ReadJsonRequiredAsync<T>(resp, ct);
+    }
+
     protected async Task<T> PutJsonAsync<T>(string url, object body, CancellationToken ct)
     {
         using var resp = await Http.PutAsJsonAsync(url, body, ct);
