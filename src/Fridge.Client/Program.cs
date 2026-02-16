@@ -1,5 +1,6 @@
 using Fridge.Client;
 using Fridge.Client.Middleware;
+using Fridge.Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddFridgeApi(builder.Configuration["Api:BaseUrl"]!);
+builder.Services.AddScoped<CurrentUserService>();
 
 var app = builder.Build();
 

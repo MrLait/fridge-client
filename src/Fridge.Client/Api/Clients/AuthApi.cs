@@ -5,6 +5,7 @@ public sealed class AuthApi(HttpClient http) : ApiClientBase(http)
 {
     public sealed record LoginRequest(string Username, string Password);
     public sealed record LoginResponse(string AccessToken);
+    public sealed record MeResponse(string Username, string Role, Dictionary<string, string[]> Claims);
 
     public async Task<string> LoginAsync(string username, string password, CancellationToken ct)
     {
@@ -15,4 +16,7 @@ public sealed class AuthApi(HttpClient http) : ApiClientBase(http)
 
         return body.AccessToken;
     }
+
+    public Task<MeResponse> MeAsync(CancellationToken ct = default)
+    => GetRequiredAsync<MeResponse>("/api/auth/me", ct);
 }
